@@ -1,10 +1,22 @@
-
 class Game
   attr_reader :code
   def self.start
     puts "Welcome to Mastermind!"
-    puts "There should be documentation"
-    puts "Press 1 you want to play as breaker, or press 2 you want to play as maker otherwise"
+    puts "Mastermind is 1-player solo-game where player could be maker or breaker.
+  
+    How to play maker:
+    
+    User must choose combination of 4 digits, which range is from ONE to SIX and computer have to break your secret code.
+    Computer will try to break secret code of the user.
+    
+    How to play breaker:
+    
+    Computer generates random code from ONE to SIX and user should guess it.
+    User has only 12 attempts to guess secret code, and user's input shall not be more than 4 digits and contain any other digits than ONE and SIX.
+    Clues: bull - means that digit in right place; cow - means that digit isn't in right place but exists in secret code.
+    For example: for secret code [2,4,4,1] and guess [2,3,3,4]
+    Clues: bulls - 1, cows - 1." 
+    puts "Press 1 you if want to play as 'breaker', or press 2 if you want to play as 'maker' otherwise"
     input = gets.chomp
     new_game = Game.new
     if input == '1'
@@ -16,8 +28,8 @@ class Game
 
   def restart_game
     puts 'If you want to restart the game, press Y or press any other button if not.'
-    input = gets.chomp.lowcase
-    input == 'y' ? self.start : 'Thanks for playing!'
+    input = gets.chomp.downcase
+    input == 'y' ? Game.start : 'Thanks for playing!'
   end
 
 def get_input
@@ -40,14 +52,13 @@ end
 
 
 def initialize_maker
+  puts documentation
   @code = get_input()
-  puts "#{@code}"
   play_maker()
 end
 
 def initialize_breaker
   @code = [rand(1..6),rand(1..6),rand(1..6),rand(1..6)]
-  puts "#{@code}"
   play_breaker()
 end
 
@@ -78,7 +89,6 @@ def play_breaker
       end
     end
     puts "bulls:#{bulls} cows #{cows}"
-    puts "#{code}"
    if bulls == 4
     puts "You win!"
     break
@@ -96,7 +106,6 @@ def play_maker
   previous_bulls = 0
   previous_cows = 0
   previous_player_guess = nil
-  code = @code
   while attempts < 12 do
     code = @code.dup
     tracking_guess = [nil,nil,nil,nil]
@@ -149,7 +158,6 @@ def play_maker
     previous_bulls = bulls
     previous_cows = cows
     puts "bulls:#{bulls} cows #{cows}"
-    puts "#{code}"
     if bulls == 4
       puts "Breaker win"
       break
@@ -161,7 +169,10 @@ def play_maker
   end
   restart_game()
   end
+  
 end
 
 
 Game.start
+
+

@@ -14,6 +14,12 @@ class Game
     end
   end
 
+  def restart_game
+    puts 'If you want to restart the game, press Y or press any other button if not.'
+    input = gets.chomp.lowcase
+    input == 'y' ? self.start : 'Thanks for playing!'
+  end
+
 def get_input
   puts "Type 4 digits from 1 to 6. Your input shouldn't be greater than 4"
   input = gets.chomp
@@ -82,6 +88,7 @@ def play_breaker
   if bulls != 4 
     puts "You lost!"
   end
+  restart_game()
 end
 
 def play_maker
@@ -91,6 +98,7 @@ def play_maker
   previous_player_guess = nil
   code = @code
   while attempts < 12 do
+    code = @code.dup
     tracking_guess = [nil,nil,nil,nil]
     bulls = 0
     cows = 0
@@ -151,6 +159,7 @@ def play_maker
   if bulls != 4 
     puts "Maker win!"
   end
+  restart_game()
   end
 end
 

@@ -1,3 +1,4 @@
+
 class Game
   attr_reader :code
   def self.start
@@ -31,12 +32,6 @@ def get_input
   input.split('').map{|el| el.to_i}
 end
 
-def initialize_breaker
-  # @code = [rand(1..6),rand(1..6),rand(1..6),rand(1..6)]
-  @code = [1,1,1,2]
-  puts "#{@code}"
-  play_breaker()
-end
 
 def initialize_maker
   @code = get_input()
@@ -44,23 +39,40 @@ def initialize_maker
   play_maker()
 end
 
+def initialize_breaker
+  @code = [rand(1..6),rand(1..6),rand(1..6),rand(1..6)]
+  puts "#{@code}"
+  play_breaker()
+end
+
 def play_breaker
   attempts = 0
-  code = @code
   while attempts < 12 do
-    cow_dupl = []
+    code = @code.dup
+    tracking_guess = [nil,nil,nil,nil]
     bulls = 0
     cows = 0
     player_guess = get_input()
     code.each_with_index do |el, index|
-      if  player_guess[index] == el
+      if player_guess[index] == el
+        code[index] = 'bull'
+        tracking_guess[index] = 'bull'
+      end
+    end
+      code.each_with_index do |el,index|
+      if  player_guess[index] != el && code.include?(player_guess[index]) && el != 'bull'
+        tracking_guess[index] = 'cow'
+      end
+    end
+    tracking_guess.each do |el|
+      if el == 'bull'
         bulls+=1
-      elsif el != player_guess[index] && code.include?(player_guess[index]) && !cow_dupl.include?(player_guess[index])
-        cow_dupl << player_guess[index]
-        cow_dupl.include?(player_guess[index]) ? next : cows+=1
+      elsif el == 'cow'
+        cows+=1
       end
     end
     puts "bulls:#{bulls} cows #{cows}"
+    puts "#{code}"
    if bulls == 4
     puts "You win!"
     break
@@ -74,8 +86,8 @@ end
 
 def play_maker
 
+  end
 end
 
-end
 
 Game.start

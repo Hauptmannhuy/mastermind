@@ -85,7 +85,72 @@ def play_breaker
 end
 
 def play_maker
-
+  attempts = 0
+  previous_bulls = 0
+  previous_cows = 0
+  previous_player_guess = nil
+  code = @code
+  while attempts < 12 do
+    tracking_guess = [nil,nil,nil,nil]
+    bulls = 0
+    cows = 0
+    change = nil
+    if previous_bulls == 0 && previous_cows == 0
+      player_guess = [rand(1..6),rand(1..6),rand(1..6),rand(1..6)]
+    elsif previous_bulls == 3 && previous_cows == 0 
+      player_guess[-1] = rand(1..6)
+    elsif previous_bulls == 2 && previous_cows == 2
+      player_guess.shuffle!
+    elsif previous_bulls > 0 && previous_cows == 0
+      change = previous_bulls
+      changing = previous_player_guess.shift(change)
+      player_guess = changing + [rand(1..6),rand(1..6),rand(1..6),rand(1..6)].pop(4-change)
+    elsif previous_bulls == 0 && previous_cows > 0
+      change = previous_cows
+      changing = previous_player_guess.shift(change)
+      player_guess = changing + [rand(1..6),rand(1..6),rand(1..6),rand(1..6)].pop(4-change)
+      player_guess.shuffle!
+    elsif previous_bulls == 0 && previous_cows == 4
+      player_guess.shuffle!
+    elsif previous_bulls > 0 && previous_cows > 0
+      change = previous_bulls + previous_cows
+      changing = previous_player_guess.shift(change)
+      player_guess = changing + [rand(1..6),rand(1..6),rand(1..6),rand(1..6)].pop(4-change)
+      player_guess.shuffle!
+    end
+    puts "computer guess is #{player_guess}"
+    code.each_with_index do |el, index|
+      if player_guess[index] == el
+        code[index] = 'bull'
+        tracking_guess[index] = 'bull'
+      end
+    end
+    code.each_with_index do |el,index|
+      if  player_guess[index] != el && code.include?(player_guess[index]) && el != 'bull'
+        tracking_guess[index] = 'cow'
+      end
+    end
+    tracking_guess.each do |el|
+      if el == 'bull'
+        bulls+=1
+      elsif el == 'cow'
+        cows+=1
+      end
+    end
+    previous_player_guess = player_guess
+    previous_bulls = bulls
+    previous_cows = cows
+    puts "bulls:#{bulls} cows #{cows}"
+    puts "#{code}"
+    if bulls == 4
+      puts "Breaker win"
+      break
+    end
+    attempts+=1
+  end
+  if bulls != 4 
+    puts "Maker win!"
+  end
   end
 end
 

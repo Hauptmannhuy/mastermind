@@ -52,7 +52,6 @@ end
 
 
 def initialize_maker
-  puts documentation
   @code = get_input()
   play_maker()
 end
